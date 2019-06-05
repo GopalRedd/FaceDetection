@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -16,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +34,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener  {
+    private static final String TAG = MainActivity.class.getSimpleName();
     ImageView imageView, imgTakePicture;
     Button btnProcessNext, btnTakePicture;
     TextView txtSampleDesc, txtTakenPicDesc;
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imageArray = new int[]{ R.drawable.sample_8, R.drawable.sample_9, R.drawable.sample_10, R.drawable.sample_11, R.drawable.sample_12, R.drawable.sample_13, R.drawable.sample_14, R.drawable.sample_15, R.drawable.sample_16};
+        imageArray = new int[]{ R.drawable.sample_1,R.drawable.sample_2,R.drawable.half,R.drawable.sample_110, R.drawable.sample_9, R.drawable.sample_10, R.drawable.sample_11, R.drawable.sample_12, R.drawable.sample_13, R.drawable.sample_14, R.drawable.sample_15, R.drawable.sample_16};
         detector = new FaceDetector.Builder(getApplicationContext())
                 .setTrackingEnabled(false)
                 .setLandmarkType(FaceDetector.ALL_CLASSIFICATIONS)
@@ -187,7 +190,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (Landmark landmark : face.getLandmarks()) {
                     int cx = (int) (landmark.getPosition().x);
                     int cy = (int) (landmark.getPosition().y);
-                    canvas.drawCircle(cx, cy, 8, paint);
+                    switch (landmark.getType()){
+                        case Landmark.LEFT_EYE:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                        case Landmark.RIGHT_EYE:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                        case Landmark.BOTTOM_MOUTH:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                        case Landmark.LEFT_MOUTH:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                        case Landmark.RIGHT_MOUTH:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                        case Landmark.NOSE_BASE:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                        case Landmark.LEFT_CHEEK:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                        case Landmark.RIGHT_CHEEK:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                        case Landmark.LEFT_EAR:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                        case Landmark.LEFT_EAR_TIP:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                        case Landmark.RIGHT_EAR:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                        case Landmark.RIGHT_EAR_TIP:
+                            drawPoint(canvas, landmark.getPosition());
+                            break;
+                    }
+
+                   // canvas.drawCircle(cx, cy, 8, paint);
                 }
 
 
@@ -202,6 +244,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             txtSampleDesc.setText("Could not set up the detector!");
         }
+    }
+
+    private void drawPoint(Canvas canvas, PointF point) {
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setStrokeWidth(8);
+        paint.setStyle(Paint.Style.STROKE);
+        float x = point.x;
+        float y = point.y;
+            Log.i(TAG,"Face");
+        //canvas.drawCircle(x, y, 1, paint);
     }
 
     private Bitmap decodeBitmapImage(int image) {
